@@ -1,57 +1,118 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
-public class Main {
+public class Main extends JFrame implements ActionListener {
+    String inputFileName;
+    String outputFileName;
+    public Main() {
+        super("Test using JFilePicker");
+
+        setLayout(new FlowLayout());
+
+        // set up a file picker component
+        JFilePicker filePicker = new JFilePicker("Input file: ", "Browse...");
+        filePicker.setMode(JFilePicker.MODE_SAVE);
+        filePicker.addFileTypeFilter(".txt", "text files");
+
+        // set up a file picker component
+        JFilePicker filePicker2 = new JFilePicker("Output file: ", "Browse...");
+        filePicker2.setMode(JFilePicker.MODE_SAVE);
+        filePicker2.addFileTypeFilter(".txt", "text files");
+
+        // access JFileChooser class directly
+        JFileChooser fileChooser = filePicker.getFileChooser();
+        fileChooser.setCurrentDirectory(new File("D:/"));
+
+        // access JFileChooser class directly
+        JFileChooser fileChooser2 = filePicker2.getFileChooser();
+        fileChooser2.setCurrentDirectory(new File("D:/"));
+
+
+        //add a compute button
+        JButton sort = new JButton("Sort");
+
+        /*
+        //add action to sort button
+        sort.addActionListener(this);
+        sort.setActionCommand("Sort");
+        */
+
+        sort.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //INPUT FILE
+                System.out.println(filePicker.getPath());
+                //OUTPUT FILE
+                System.out.println(filePicker2.getPath());
+
+
+                StringSorter ss = new StringSorter();
+
+                //read the strings from the file
+                try {
+                    ss.read("src/test.txt");
+                } catch (IOException a) {
+                    throw new RuntimeException(a);
+                }
+
+                ss.sortStrings(ss.list.size());
+
+                try {
+                    ss.write("src/sorted.txt");
+                } catch (IOException a) {
+                    throw new RuntimeException(a);
+                }
+            }
+        });
+
+
+        // add the component to the frame
+        add(filePicker);
+        add(filePicker2);
+        add(sort);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(600, 200);
+        setLocationRelativeTo(null);    // center on screen
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        String action = ae.getActionCommand();
+        if (action.equals("Sort")) {
+
+            System.out.println(inputFileName);
+
+            StringSorter ss = new StringSorter();
+
+            //read the strings from the file
+            try {
+                ss.read("src/test.txt");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            ss.sortStrings(ss.list.size());
+
+            try {
+                ss.write("src/sorted.txt");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
-
-        //create a popup window
-        //Creating the Frame
-        JFrame frame = new JFrame("String Sorter");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 200);
-
-
-        //Creating the panel at bottom and adding components
-        JPanel panel = new JPanel(); // the panel is not visible in output
-        JPanel panel2 = new JPanel();
-        JPanel panel3 = new JPanel();
-
-        JLabel label = new JLabel("Input File:");
-        JTextField tf = new JTextField(10); // accepts upto 10 characters
-
-        JLabel label2 = new JLabel("Output File:");
-        JTextField tf2 = new JTextField(10); // accepts upto 10 characters
-
-        JButton send = new JButton("Send");
-        JButton reset = new JButton("Reset");
-
-        panel.add(label); // Components Added using Flow Layout
-        panel.add(tf);
-
-        panel2.add(label2); // Components Added using Flow Layout
-        panel2.add(tf2);
-
-        panel3.add(send);
-        panel3.add(reset);
-
-
-        //Adding Components to the frame.
-        frame.getContentPane().add(BorderLayout.NORTH, panel);
-        frame.getContentPane().add(BorderLayout.CENTER, panel2);
-        frame.getContentPane().add(BorderLayout.SOUTH, panel3);
-
-        frame.setVisible(true);
-
-        StringSorter ss = new StringSorter();
-
-        //read the strings from the file
-        ss.read("src/test.txt");
-
-        ss.sortStrings(ss.list.size());
-
-        ss.write("src/sorted.txt");
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Main().setVisible(true);
+            }
+        });
     }
 
 }

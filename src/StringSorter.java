@@ -34,7 +34,6 @@ public class StringSorter {
     //read method reads an array of strings from a file
     public ArrayList<String> read(String filename) throws IOException {
         ArrayList<String> result = new ArrayList<>();
-
         try (Scanner s = new Scanner(new FileReader(filename))) {
             while (s.hasNext()) {
                 result.add(s.nextLine());
