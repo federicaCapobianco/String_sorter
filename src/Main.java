@@ -53,7 +53,7 @@ public class Main extends JFrame implements ActionListener {
 
                 //read the strings from the file
                 try {
-                    ss.read("src/test.txt");
+                    ss.read(filePicker.getPath());
                 } catch (IOException a) {
                     throw new RuntimeException(a);
                 }
@@ -61,7 +61,8 @@ public class Main extends JFrame implements ActionListener {
                 ss.sortStrings(ss.list.size());
 
                 try {
-                    ss.write("src/sorted.txt");
+                    //works locally but not on desktop why??
+                    ss.write(filePicker2.getPath());
                 } catch (IOException a) {
                     throw new RuntimeException(a);
                 }
